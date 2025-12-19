@@ -1,0 +1,59 @@
+trigger: none
+
+pool: Default
+
+stages:
+  - stage: terraforminitValidationPlan
+    displayName: terraform init, validate and plan
+    jobs:
+      - job: initValidatePlan
+        displayName: Init, Validate and Plan
+        steps:
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+            backendServiceArm: 'InfraServiceConnection'
+            backendAzureRmStorageAccountName: 'rackteckstg'
+            backendAzureRmContainerName: 'rackteckcont'
+            backendAzureRmKey: 'dev.tfstate'
+
+  - stage: securityScanning
+    displayName: securityScanning
+    jobs:
+      - job: tflint
+        steps:
+        # - task: CmdLine@2
+        #   inputs:
+        #     script: 'tflint --chdir --recursive > tflint-report.xml'
+        #     workingDirectory: '''$(system.DefaultWorkingDirectory)'''
+
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            script: |
+              tflint --init
+              tflint
+            workingDirectory: '$(system.DefaultWorkingDirectory)'
+
+      - job: tfsec
+        steps:
+        - task: tfsec@1
+          inputs:
+            version: 'v1.26.0'
+            dir: '$(system.DefaultWorkingDirectory)'
+
+      - job: CheckovScanning
+        steps:
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            script: 'checkov -d . --framework terraform --compact'
+            workingDirectory: '$(system.DefaultWorkingDirectory)'
+
+
+
+  # - stage: costEstimation
+  # - stage: terraformApply
