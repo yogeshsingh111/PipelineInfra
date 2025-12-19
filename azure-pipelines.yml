@@ -25,11 +25,6 @@ stages:
     jobs:
       - job: tflint
         steps:
-        # - task: CmdLine@2
-        #   inputs:
-        #     script: 'tflint --chdir --recursive > tflint-report.xml'
-        #     workingDirectory: '''$(system.DefaultWorkingDirectory)'''
-
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
@@ -45,15 +40,66 @@ stages:
             version: 'v1.26.0'
             dir: '$(system.DefaultWorkingDirectory)'
 
-      - job: CheckovScanning
+  - stage: TerraformPlan
+    displayName: TerraformPlan
+    jobs:
+      - job: TerraformPlan
+        displayName: TerraformPlan
         steps:
-        - task: PowerShell@2
+        - task: TerraformTask@5
+          displayName: terraform init
           inputs:
-            targetType: 'inline'
-            script: 'checkov -d . --framework terraform --compact'
-            workingDirectory: '$(system.DefaultWorkingDirectory)'
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: 'InfraServiceConnection'
+            backendAzureRmStorageAccountName: 'rackteckstg'
+            backendAzureRmContainerName: 'rackteckcont'
+            backendAzureRmKey: 'dev.tfstate'
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+            environmentServiceNameAzureRM: 'InfraServiceConnection'
+
+  - stage: ManualValidation
+    displayName: ManualValidation
+    pool: server
+    jobs:
+      - job: ManualValidation
+        displayName: ManualValidation
+        steps:
+        - task: ManualValidation@1
+          inputs:
+            notifyUsers: 'Yogesh Singh'
+            approvers: 'Please verify and approve.'
+            instructions: 'For your approval.'
 
 
+  - stage: terraformApply
+    displayName: terraformApply
+    jobs:
+      - job: terraformApply
+        displayName: terraformApply
+        steps:
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: 'InfraServiceConnection'
+            backendAzureRmStorageAccountName: 'rackteckstg'
+            backendAzureRmContainerName: 'rackteckcont'
+            backendAzureRmKey: 'dev.tfstate'
 
-  # - stage: costEstimation
-  # - stage: terraformApply
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'apply'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+            environmentServiceNameAzureRM: 'InfraServiceConnection'
+
