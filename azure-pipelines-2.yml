@@ -28,3 +28,28 @@ stages:
             backendAzureRmStorageAccountName: 'rackteckstg'
             backendAzureRmContainerName: 'rackteckcont'
             backendAzureRmKey: 'dev.tfstate'
+
+  - stage: stage3
+    displayName: codeScanning
+    jobs:
+      - job: CodeScanningwithTFlint
+        displayName: CodeScanningwithTFlint
+        steps:
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            script: |
+              tflint --init
+              tflint
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
+
+  - stage: stage4
+    displayName: CodeScanningwithtfsec
+    jobs:
+      - job: CodeScanningwithtfsec
+        displayName: CodeScanningwithtfsec
+        steps:
+        - task: tfsec@1
+          inputs:
+            version: 'v1.26.0'
+            dir: '$(System.DefaultWorkingDirectory)'
