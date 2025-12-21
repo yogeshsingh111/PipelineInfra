@@ -1,0 +1,15 @@
+trigger: none
+
+pool: default
+
+stages:
+  - stage: init
+    displayName: teraforminit and Validation
+    jobs:
+      - job: terraforminit
+        displayName: teraform init
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'
+        
