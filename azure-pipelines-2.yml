@@ -30,7 +30,7 @@ stages:
             backendAzureRmKey: 'dev.tfstate'
 
   - stage: stage3
-    displayName: codeScanning
+    displayName: CodeScanningwithTFlint
     jobs:
       - job: CodeScanningwithTFlint
         displayName: CodeScanningwithTFlint
