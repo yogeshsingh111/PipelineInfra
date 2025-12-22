@@ -11,7 +11,7 @@ parameters:
   - name: workingdir
     type: string
 
-  - name: svcname
+  - name: backendServiceArm
     type: string
 
     
@@ -27,7 +27,7 @@ stages:
             provider: 'azurerm'
             command: 'init'
             workingDirectory: ${{ parameters.workingdir }}
-            backendServiceArm: ${{ parameters.svcname }}
+            backendServiceArm: ${{ parameters.backendServiceArm }}
             backendAzureRmStorageAccountName: ${{ parameters.storageaccount }}
             backendAzureRmContainerName: ${{ parameters.containername }}
             backendAzureRmKey: ${{ parameters.statefilename }}
