@@ -1,0 +1,11 @@
+    jobs:
+      - job: CodeScanningwithTFlint
+        displayName: CodeScanningwithTFlint
+        steps:
+        - task: PowerShell@2
+          inputs:
+            targetType: 'inline'
+            script: |
+              tflint --init
+              tflint
+            workingDirectory: '$(System.DefaultWorkingDirectory)'
