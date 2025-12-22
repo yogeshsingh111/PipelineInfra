@@ -1,0 +1,16 @@
+stages:
+  - stage: stage2
+    displayName: terraform init
+    jobs:
+      - job: terraformInit
+        displayName: terraform init
+        steps:
+        - task: TerraformTask@5
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+            backendServiceArm: 'InfraServiceConnection'
+            backendAzureRmStorageAccountName: 'rackteckstg'
+            backendAzureRmContainerName: 'rackteckcont'
+            backendAzureRmKey: 'dev.tfstate'
