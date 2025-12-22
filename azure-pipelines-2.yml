@@ -3,53 +3,45 @@ trigger: none
 pool: default
 
 stages:
-  - stage: stage1
-    displayName: terraform install
-    jobs:
-      - job: terraformInstall
-        displayName: terraform install
-        steps:
-        - task: TerraformInstaller@1
-          inputs:
-            terraformVersion: 'latest'
+  - template: yogesh/init.yml
 
-  - stage: stage2
-    displayName: terraform init
-    jobs:
-      - job: terraformInit
-        displayName: terraform init
-        steps:
-        - task: TerraformTask@5
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
-            backendServiceArm: 'InfraServiceConnection'
-            backendAzureRmStorageAccountName: 'rackteckstg'
-            backendAzureRmContainerName: 'rackteckcont'
-            backendAzureRmKey: 'dev.tfstate'
+  # - stage: stage2
+  #   displayName: terraform init
+  #   jobs:
+  #     - job: terraformInit
+  #       displayName: terraform init
+  #       steps:
+  #       - task: TerraformTask@5
+  #         inputs:
+  #           provider: 'azurerm'
+  #           command: 'init'
+  #           workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+  #           backendServiceArm: 'InfraServiceConnection'
+  #           backendAzureRmStorageAccountName: 'rackteckstg'
+  #           backendAzureRmContainerName: 'rackteckcont'
+  #           backendAzureRmKey: 'dev.tfstate'
 
-  - stage: stage3
-    displayName: CodeScanningwithTFlint
-    jobs:
-      - job: CodeScanningwithTFlint
-        displayName: CodeScanningwithTFlint
-        steps:
-        - task: PowerShell@2
-          inputs:
-            targetType: 'inline'
-            script: |
-              tflint --init
-              tflint
-            workingDirectory: '$(System.DefaultWorkingDirectory)'
+  # - stage: stage3
+  #   displayName: CodeScanningwithTFlint
+  #   jobs:
+  #     - job: CodeScanningwithTFlint
+  #       displayName: CodeScanningwithTFlint
+  #       steps:
+  #       - task: PowerShell@2
+  #         inputs:
+  #           targetType: 'inline'
+  #           script: |
+  #             tflint --init
+  #             tflint
+  #           workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-  - stage: stage4
-    displayName: CodeScanningwithtfsec
-    jobs:
-      - job: CodeScanningwithtfsec
-        displayName: CodeScanningwithtfsec
-        steps:
-        - task: tfsec@1
-          inputs:
-            version: 'v1.26.0'
-            dir: '$(System.DefaultWorkingDirectory)'
+  # - stage: stage4
+  #   displayName: CodeScanningwithtfsec
+  #   jobs:
+  #     - job: CodeScanningwithtfsec
+  #       displayName: CodeScanningwithtfsec
+  #       steps:
+  #       - task: tfsec@1
+  #         inputs:
+  #           version: 'v1.26.0'
+  #           dir: '$(System.DefaultWorkingDirectory)'
