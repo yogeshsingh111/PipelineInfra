@@ -7,19 +7,11 @@ stages:
 
   - template: yogesh/init.yml
 
-  # - stage: stage3
-  #   displayName: CodeScanningwithTFlint
-  #   jobs:
-  #     - job: CodeScanningwithTFlint
-  #       displayName: CodeScanningwithTFlint
-  #       steps:
-  #       - task: PowerShell@2
-  #         inputs:
-  #           targetType: 'inline'
-  #           script: |
-  #             tflint --init
-  #             tflint
-  #           workingDirectory: '$(System.DefaultWorkingDirectory)'
+  - stage: stage3
+    displayName: CodeScanningwithTFlint
+    jobs:
+      - template: yogesh/scan.yml
+
 
   # - stage: stage4
   #   displayName: CodeScanningwithtfsec
