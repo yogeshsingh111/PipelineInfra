@@ -2,21 +2,44 @@ trigger: none
 
 pool: default
 
+variables:
+  - name: Backend_credentials
+
+
 stages:
   - template: yogesh/install.yml
 
+
   - template: yogesh/init.yml
+    parameters:
+      storageaccount: $(stgname)
+      containername: $(contname)
+      statefilename: $(statefilename)
+      workingdir: $(DevWorkDir)
+      backendServiceArm: InfraServiceConnection
 
-  - stage: stage3
-    displayName: CodeScanningwithTFlint
-    jobs:
-      - template: yogesh/scan.yml
+  # - template: yogesh/init.yml
+  #   parameters:
+  #     storageaccount: '$(stgname)'
+  #     containername: '$(contname)'
+  #     statefilename: '$(statefilename)'
+  #     # subscriptionID: '$(subID)'
+  #     workingdir: '$(DevWorkDir)'
+  #     backendServiceArm: '$(svcname)'
 
 
-  - stage: stage4
-    displayName: CodeScanningwithtfsec
-    jobs:
-      - job: CodeScanningwithtfsec
-        displayName: CodeScanningwithtfsec
-        steps:
-          - template: yogesh/tfsecscan.yml
+  # - stage: stage3
+  #   displayName: CodeScanningwithTFlint
+  #   jobs:
+  #     - template: yogesh/scan.yml
+
+
+  # - stage: stage4
+  #   displayName: CodeScanningwithtfsec
+  #   jobs:
+  #     - job: CodeScanningwithtfsec
+  #       displayName: CodeScanningwithtfsec
+  #       steps:
+  #         - template: yogesh/tfsecscan.yml
+
+
