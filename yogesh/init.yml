@@ -1,0 +1,10 @@
+stages:
+  - stage: stage1
+    displayName: terraform install
+    jobs:
+      - job: terraformInstall
+        displayName: terraform install
+        steps:
+        - task: TerraformInstaller@1
+          inputs:
+            terraformVersion: 'latest'
