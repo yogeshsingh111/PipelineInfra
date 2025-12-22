@@ -1,3 +1,20 @@
+parameters:
+  - name: storageaccount
+    type: string
+
+  - name: containername
+    type: string
+
+  - name: statefilename
+    type: string
+
+  - name: workingdir
+    type: string
+
+  - name: svcname
+    type: string
+
+    
 stages:
   - stage: stage2
     displayName: terraform init
@@ -9,8 +26,8 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
-            backendServiceArm: 'InfraServiceConnection'
-            backendAzureRmStorageAccountName: 'rackteckstg'
-            backendAzureRmContainerName: 'rackteckcont'
-            backendAzureRmKey: 'dev.tfstate'
+            workingDirectory: ${{ parameters.workingdir }}
+            backendServiceArm: ${{ parameters.svcname }}
+            backendAzureRmStorageAccountName: ${{ parameters.storageaccount }}
+            backendAzureRmContainerName: ${{ parameters.containername }}
+            backendAzureRmKey: ${{ parameters.statefilename }}
