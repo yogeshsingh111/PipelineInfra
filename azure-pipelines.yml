@@ -40,6 +40,22 @@ stages:
             version: 'v1.26.0'
             dir: '$(system.DefaultWorkingDirectory)'
 
+      - job: checkov
+        displayName: checkovscanning
+        steps:
+        - task: PowerShell@2
+          displayName: checkov
+          continueOnError: true
+          inputs:
+            targetType: 'inline'
+            script: 'checkov -d $(system.defaultworkingdirectory) -o junitxml > checkov.out.xml'
+            workingDirectory: '$(system.DefaultWorkingDirectory)'
+
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFormat: 'JUnit'
+            testResultsFiles: 'checkov.out.xml'
+
   - stage: TerraformPlan
     displayName: TerraformPlan
     jobs:
