@@ -118,7 +118,10 @@ stages:
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
-            script: 'infracost breakdown --path=$(System.DefaultWorkingDirectory)/env/dev'
+            script: |
+              infracost breakdown --path=$(System.DefaultWorkingDirectory)/env/dev 
+              --format=json
+              --out-file=$(Build.ArtifactStagingDirectory)/infracost.json
           env:
             INFRACOST_API_KEY: $(INFRACOST_API_KEY)
 
