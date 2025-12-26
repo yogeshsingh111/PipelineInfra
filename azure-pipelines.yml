@@ -2,6 +2,9 @@ trigger: none
 
 pool: Default
 
+variables:
+- group: infracost-secrets
+
 stages:
   - stage: terraforminitValidationPlan
     displayName: terraform init, validate and plan
@@ -91,6 +94,8 @@ stages:
           inputs:
             notifyUsers: 'Yogesh Singh'
             instructions: 'For your approval.'
+
+
 
   - stage: infrocostcheck
     displayName: infracost check
