@@ -118,8 +118,7 @@ stages:
         - task: PowerShell@2
           inputs:
             targetType: 'inline'
-            script: 'infracost breakdown --path=.'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/env/dev'
+            script: 'infracost breakdown --path=$(System.DefaultWorkingDirectory)/env/dev'
           env:
             INFRACOST_API_KEY: $(INFRACOST_API_KEY)
 
