@@ -1,0 +1,11 @@
+name: application demo workflow
+
+on: workflow_dispatch
+
+jobs:
+  demo:
+    name:demo jobs
+    runs-on: ubuntu-latest
+    steps:
+      - name: greetings
+        run: echo "Hello World"
